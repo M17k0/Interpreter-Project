@@ -1,27 +1,46 @@
-#include "Node.h"
-#include <iostream>
+#include "Executor.h"
+
 #include <stack>
 #include <unordered_set>
 #include <unordered_map>
-#include <algorithm>
 
-/// @brief Class with methods that executes an AST
-class Executor
+void Executor::execute(Node treeRoot)
 {
-public:
-    /// @brief Executes an AST given by its root using the console output and input streams
-    /// @param treeRoot The root node of the AST
-    static void execute(Node treeRoot)
-    {
-        execute(treeRoot, std::cout, std::cin);
-    }
+	execute(treeRoot, std::cout, std::cin);
+}
 
-	/// @brief Executes an AST given by its root using the given output and input streams
-	/// @param treeRoot The root node of the AST
-	/// @param out The output stream
-	/// @param in The input stream
-	static void execute(Node treeRoot, std::ostream& out, std::istream& in)
-	{
+void Executor::deleteTree(Node& treeRoot)
+{
+    // Delete the children vector pointers for every node with a simple dfs
+
+    std::stack<Node> deleteStack;
+    std::unordered_map<Node, int> visitedChildren;
+
+    deleteStack.push(treeRoot);
+    visitedChildren[treeRoot] = 0;
+    while (!deleteStack.empty())
+    {
+        Node currentNode = deleteStack.top();
+        int nextChildIndex = visitedChildren[currentNode];
+
+        if (nextChildIndex < currentNode.children->size())
+        {
+            Node child = (*currentNode.children)[nextChildIndex];
+            deleteStack.push(child);
+            visitedChildren[child] = 0;
+            visitedChildren[currentNode]++;
+        }
+        else
+        {
+            delete currentNode.children;
+            deleteStack.pop();
+        }
+    }
+}
+
+void Executor::execute(Node treeRoot, std::ostream& out, std::istream& in)
+{
+    {
         // Execution is done by traversing the AST with dfs iteratively
 
         // We need stacks for the currently executed node, the results of the execution and a stack for the funtion call parameters, 
@@ -30,7 +49,7 @@ public:
         std::unordered_map<Node, int> visitedChildren;
         std::stack<long long> executionResults;
         std::stack<std::pair<std::string, long long>> functionParameterStack;
-        
+
         // We need hash maps to store the cuurent values of variables, 
         // function definition nodes (for faster finding when called)
         // and for the function paremeters
@@ -312,36 +331,5 @@ public:
                 }
             }
         }
-	}
-
-    /// @brief Deletes the AST (deletes the children vector)
-    /// @param treeRoot The root of the tree
-    static void deleteTree(Node& treeRoot)
-    {
-        // Delete the children vector pointers for every node with a simple dfs
-
-        std::stack<Node> deleteStack;
-        std::unordered_map<Node, int> visitedChildren;
-
-        deleteStack.push(treeRoot);
-        visitedChildren[treeRoot] = 0;
-        while (!deleteStack.empty())
-        {
-            Node currentNode = deleteStack.top();
-            int nextChildIndex = visitedChildren[currentNode];
-
-            if (nextChildIndex < currentNode.children->size())
-            {
-                Node child = (*currentNode.children)[nextChildIndex];
-                deleteStack.push(child);
-                visitedChildren[child] = 0;
-                visitedChildren[currentNode]++;
-            }
-            else
-            {
-                delete currentNode.children;
-                deleteStack.pop();
-            }
-        }
     }
-};
+}

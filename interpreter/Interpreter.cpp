@@ -1,8 +1,9 @@
 #include <exception>
-#include "Reader.cpp"
-#include "Tokenizer.cpp"
-#include "Compiler.cpp"
-#include "Executor.cpp"
+
+#include "Reader.h"
+#include "Tokenizer.h"
+#include "Executor.h"
+#include "Compiler.h"
 
 int main()
 {

@@ -1,39 +1,28 @@
-#include <vector>
-#include <string>
-#include <fstream>
+#include "Reader.h"
 
-/// @brief Reader class with methods for reading from files and streams
-class Reader
+std::vector<std::string> Reader::readAllLines(std::string filePath)
 {
-public:
-	/// @brief Reads all lines from a file
-	/// @param filePath The path of the file
-	/// @return A vector with strings of the lines in the file
-	static std::vector<std::string> readAllLines(std::string filePath)
+	std::ifstream programFile(filePath);
+	if (!programFile.is_open())
+		throw std::exception("Couldn't open file for reading");
+
+	std::vector<std::string> lines = readAllLines(programFile);
+
+	programFile.close();
+
+	return lines;
+}
+
+std::vector<std::string> Reader::readAllLines(std::istream& in)
+{
+	std::vector<std::string> lines;
+
+	std::string line;
+
+	while (std::getline(in, line))
 	{
-		std::ifstream programFile(filePath);
-
-		std::vector<std::string> lines = readAllLines(programFile);
-
-		programFile.close();
-
-		return lines;
+		lines.push_back(line);
 	}
 
-	/// @brief Reads all lines from a stream
-	/// @param in The input stream
-	/// @return A vector with strings of the lines in the stream
-	static std::vector<std::string> readAllLines(std::istream& in)
-	{
-		std::vector<std::string> lines;
-
-		std::string line;
-
-		while (std::getline(in, line))
-		{
-			lines.push_back(line);
-		}
-
-		return lines;
-	}
-};
+	return lines;
+}

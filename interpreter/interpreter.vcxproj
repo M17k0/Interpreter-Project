@@ -138,9 +138,13 @@
     <Text Include="test1.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Compiler.h" />
+    <ClInclude Include="Executor.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeType.h" />
+    <ClInclude Include="Reader.h" />
     <ClInclude Include="Token.h" />
+    <ClInclude Include="Tokenizer.h" />
     <ClInclude Include="TokenType.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
